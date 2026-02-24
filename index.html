@@ -10,6 +10,7 @@
         body { font-family: 'Inter', sans-serif; }
         .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        select:disabled { opacity: 0.6; cursor: not-allowed; }
     </style>
 </head>
 <body class="bg-slate-100 min-h-screen py-10 px-4 text-slate-800">
@@ -24,13 +25,23 @@
 
         <form id="membershipForm" class="p-8 space-y-10">
             
-            <div class="bg-blue-900 p-6 rounded-xl shadow-lg text-left">
-                <label class="block text-sm font-bold text-blue-100 uppercase mb-2 tracking-widest">Assign to Church Branch</label>
-                <select name="branch" required class="w-full p-3 border-none rounded-lg focus:ring-4 focus:ring-blue-400 outline-none bg-white font-bold text-gray-800">
-                    <option value="" disabled selected>-- Select Branch --</option>
-                    <option value="Main Branch">Main Branch</option>
-                    <option value="Tsakane">Tsakane</option>
-                </select>
+            <div class="bg-blue-900 p-6 rounded-xl shadow-lg text-left space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-blue-100 uppercase mb-2 tracking-widest">Select Province</label>
+                    <select id="provinceSelect" name="province" required onchange="updateBranches()" class="w-full p-3 border-none rounded-lg focus:ring-4 focus:ring-blue-400 outline-none bg-white font-bold text-gray-800">
+                        <option value="" disabled selected>-- Select Province --</option>
+                        <option value="Gauteng">Gauteng</option>
+                        <option value="Mpumalanga">Mpumalanga</option>
+                        <option value="ESwatini">ESwatini</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-blue-100 uppercase mb-2 tracking-widest">Assign to Church Branch</label>
+                    <select id="branchSelect" name="branch" required class="w-full p-3 border-none rounded-lg focus:ring-4 focus:ring-blue-400 outline-none bg-white font-bold text-gray-800">
+                        <option value="" disabled selected>-- Select Province First --</option>
+                    </select>
+                </div>
             </div>
 
             <section class="space-y-4 border-l-4 border-blue-800 pl-6 text-left">
@@ -39,33 +50,33 @@
                     <input type="file" id="memberPhoto" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewImage(event)" required>
                     <div id="photoPlaceholder" class="text-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /></svg>
-                        <p class="text-sm font-bold text-gray-500 uppercase">Tap to Capture or Upload Photo</p>
+                        <p class="text-sm font-bold text-gray-500 uppercase">Upload Profile Photo</p>
                     </div>
                     <img id="photoPreview" class="hidden w-40 h-40 rounded-full object-cover border-4 border-white shadow-xl">
                 </div>
             </section>
 
             <section class="space-y-4 border-l-4 border-blue-800 pl-6 text-left">
-                <h2 class="text-xl font-bold text-blue-900 uppercase tracking-wide">Member Details</h2>
+                <h2 class="text-xl font-bold text-blue-900 uppercase tracking-wide">Personal Details</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-1">
                         <label class="text-xs font-bold text-gray-400 uppercase">First Name</label>
-                        <input type="text" id="firstName" name="firstName" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none">
+                        <input type="text" name="firstName" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none">
                     </div>
                     <div class="space-y-1">
                         <label class="text-xs font-bold text-gray-400 uppercase">Last Name</label>
-                        <input type="text" id="lastName" name="lastName" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none">
+                        <input type="text" name="lastName" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none">
                     </div>
                     <div class="space-y-1">
                         <label class="text-xs font-bold text-gray-400 uppercase">Date of Birth</label>
-                        <input type="date" id="dob" name="dob" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none">
+                        <input type="date" name="dob" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none">
                     </div>
                     <div class="space-y-1">
                         <label class="text-xs font-bold text-gray-400 uppercase">Mobile Number</label>
                         <input type="tel" name="phone" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none">
                     </div>
                     <div class="space-y-1 md:col-span-2">
-                        <label class="text-xs font-bold text-gray-400 uppercase">Email Address</label>
+                        <label class="text-xs font-bold text-gray-400 uppercase">Email Address (Optional)</label>
                         <input type="email" name="email" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none">
                     </div>
                 </div>
@@ -81,8 +92,8 @@
                             <input type="text" name="city" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none">
                         </div>
                         <div class="space-y-1">
-                            <label class="text-xs font-bold text-gray-400 uppercase">Province</label>
-                            <input type="text" name="province" required class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none">
+                            <label class="text-xs font-bold text-gray-400 uppercase">Postal Code</label>
+                            <input type="text" name="postalCode" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none">
                         </div>
                     </div>
                 </div>
@@ -91,7 +102,7 @@
             <section class="space-y-4 pt-6 border-t border-gray-100 text-left">
                 <div class="flex justify-between items-center">
                     <h2 class="text-xl font-bold text-blue-900 uppercase tracking-wide">Dependents</h2>
-                    <button type="button" onclick="addDependent()" class="bg-blue-800 text-white px-4 py-2 rounded-lg font-bold text-sm">+ Add</button>
+                    <button type="button" onclick="addDependent()" class="bg-blue-800 text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-blue-700 transition">+ Add Dependent</button>
                 </div>
                 <div id="dependentsContainer" class="space-y-3"></div>
             </section>
@@ -111,11 +122,36 @@
             <h2 class="text-2xl font-black text-gray-800 uppercase tracking-tighter">Registered!</h2>
             <p class="text-gray-500 mt-2 font-semibold">Your Reference Number is:</p>
             <div id="refDisplay" class="text-3xl font-black text-blue-900 my-4 bg-blue-50 p-4 rounded-xl border-2 border-dashed border-blue-200 uppercase tracking-widest">---</div>
-            <button onclick="location.reload()" class="w-full bg-blue-900 text-white py-4 rounded-xl font-bold uppercase tracking-widest">Close</button>
+            <button onclick="location.reload()" class="w-full bg-blue-900 text-white py-4 rounded-xl font-bold uppercase tracking-widest">Done</button>
         </div>
     </div>
 
     <script>
+        // --- Dynamic Branch Logic ---
+        const branchData = {
+            "Gauteng": ["Tsakane", "Soshanguve", "Daveyton", "Soweto", "Vosloorus"],
+            "Mpumalanga": ["Main Branch", "Nhlazatshe", "Ermelo"],
+            "ESwatini": ["ESwatini Branch"]
+        };
+
+        function updateBranches() {
+            const province = document.getElementById('provinceSelect').value;
+            const branchSelect = document.getElementById('branchSelect');
+            
+            // Clear and reset branch select
+            branchSelect.innerHTML = '<option value="" disabled selected>-- Select Branch --</option>';
+            
+            if (branchData[province]) {
+                branchData[province].forEach(branch => {
+                    const opt = document.createElement('option');
+                    opt.value = branch;
+                    opt.innerHTML = branch;
+                    branchSelect.appendChild(opt);
+                });
+            }
+        }
+
+        // --- Photo Preview ---
         function previewImage(event) {
             const reader = new FileReader();
             reader.onload = function(){
@@ -124,42 +160,44 @@
                 output.src = reader.result;
                 output.classList.remove('hidden');
             };
-            reader.readAsDataURL(event.target.files[0]);
+            if(event.target.files[0]) reader.readAsDataURL(event.target.files[0]);
         }
 
+        // --- Dependent Management ---
         function addDependent() {
             const container = document.getElementById('dependentsContainer');
             const div = document.createElement('div');
             div.className = "flex flex-col md:flex-row gap-2 bg-slate-50 p-4 rounded-xl border border-gray-200 animate-fade-in";
             div.innerHTML = `
-                <div class="flex-1 text-left"><label class="text-[10px] font-bold text-gray-400 uppercase">First Name</label><input type="text" name="depFirstName[]" class="w-full p-2 border rounded mt-1"></div>
-                <div class="flex-1 text-left"><label class="text-[10px] font-bold text-gray-400 uppercase">Last Name</label><input type="text" name="depLastName[]" class="w-full p-2 border rounded mt-1"></div>
-                <div class="w-full md:w-32 text-left"><label class="text-[10px] font-bold text-gray-400 uppercase">DOB</label><input type="date" name="depDob[]" class="w-full p-2 border rounded mt-1"></div>
-                <button type="button" onclick="this.parentElement.remove()" class="text-red-500 p-2">×</button>`;
+                <div class="flex-1 text-left"><label class="text-[10px] font-bold text-gray-400 uppercase">First Name</label><input type="text" name="depFirstName[]" required class="w-full p-2 border rounded mt-1"></div>
+                <div class="flex-1 text-left"><label class="text-[10px] font-bold text-gray-400 uppercase">Last Name</label><input type="text" name="depLastName[]" required class="w-full p-2 border rounded mt-1"></div>
+                <div class="w-full md:w-32 text-left"><label class="text-[10px] font-bold text-gray-400 uppercase">DOB</label><input type="date" name="depDob[]" required class="w-full p-2 border rounded mt-1"></div>
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-500 font-bold p-2 hover:bg-red-50 rounded-lg">×</button>`;
             container.appendChild(div);
         }
 
+        // --- Submission Logic ---
         document.getElementById('membershipForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            btn.innerText = "SENDING...";
+            btn.innerText = "PROCESSING...";
             btn.disabled = true;
 
             const formData = new FormData(e.target);
-            
             const data = {
                 firstName: formData.get('firstName'),
                 lastName: formData.get('lastName'),
                 dob: formData.get('dob'),
                 branch: formData.get('branch'),
+                province: formData.get('province'),
                 phone: formData.get('phone'),
                 email: formData.get('email'),
                 address: formData.get('address'),
                 city: formData.get('city'),
-                province: formData.get('province'),
                 dependents: []
             };
 
+            // Capture Dependents
             const dNames = formData.getAll('depFirstName[]');
             const dLasts = formData.getAll('depLastName[]');
             const dDobs = formData.getAll('depDob[]');
@@ -167,6 +205,7 @@
                 if(name) data.dependents.push({ firstName: name, lastName: dLasts[i], dob: dDobs[i] });
             });
 
+            // Convert Image to Base64 and Submit
             const photoFile = document.getElementById('memberPhoto').files[0];
             const reader = new FileReader();
             reader.readAsDataURL(photoFile);
@@ -185,10 +224,10 @@
                         document.getElementById('refDisplay').innerText = result.ref;
                         document.getElementById('successModal').classList.remove('hidden');
                     } else {
-                        alert("Error: " + (result.error || "Submission failed"));
+                        alert("Submission Error: " + (result.error || "Please try again."));
                     }
                 } catch (err) {
-                    alert("Network Error. Check your internet or API Gateway CORS.");
+                    alert("Network Error. Please check your connection.");
                 } finally {
                     btn.innerText = "Complete Registration";
                     btn.disabled = false;
